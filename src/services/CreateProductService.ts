@@ -1,3 +1,4 @@
+import { getCustomRepository } from 'typeorm';
 import Product from '../models/Product';
 import ProductsRepository from '../repositories/ProductsRepository';
 
@@ -9,27 +10,26 @@ interface Request {
 }
 
 class CreateProductService {
-    productsRepository: ProductsRepository;
-
-    constructor(productsRepository: ProductsRepository) {
-        this.productsRepository = productsRepository;
-    }
-
-    public execute({
+    public async execute({
         name,
         description = '',
         price,
         photo = '',
-    }: Request): Product {
+    }: Request): Promise<Product> {
         if (!name) throw Error('name must be a valid value');
         if (!price || price <= 0) throw Error('price must be a valid value');
 
-        const product = this.productsRepository.create({
+        const productsRepository = getCustomRepository(ProductsRepository);
+
+        const product = productsRepository.create({
             name,
             price,
             photo,
             description,
         });
+
+        await productsRepository.save(product);
+
         return product;
     }
 }

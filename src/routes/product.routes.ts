@@ -1,30 +1,33 @@
 import { Router } from 'express';
-import routes from '.';
+import { getCustomRepository } from 'typeorm';
 import ProductsRepository from '../repositories/ProductsRepository';
 import CreateProductService from '../services/CreateProductService';
 
-const productsRepository = new ProductsRepository();
-const createProductService = new CreateProductService(productsRepository);
-
 const productRoutes = Router();
 
-productRoutes.post('/', (request, response) => {
+productRoutes.post('/', async (request, response) => {
     try {
         const { name, description, price, photo } = request.body;
-        const product = createProductService.execute({
+
+        const createProductService = new CreateProductService();
+
+        const product = await createProductService.execute({
             name,
             description,
             price,
             photo,
         });
+
         return response.json(product);
     } catch (err) {
         return response.status(400).json({ message: err.message });
     }
 });
 
-productRoutes.get('/', (request, response) => {
-    return response.json(productsRepository.all());
+productRoutes.get('/', async (request, response) => {
+    const productsRepository = getCustomRepository(ProductsRepository);
+    const products = await productsRepository.find();
+    return response.json(products);
 });
 
 export default productRoutes;
