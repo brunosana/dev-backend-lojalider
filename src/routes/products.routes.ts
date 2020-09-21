@@ -1,11 +1,13 @@
 import { Router } from 'express';
 import { getCustomRepository } from 'typeorm';
+import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 import ProductsRepository from '../repositories/ProductsRepository';
 import CreateProductService from '../services/CreateProductService';
+import usersRouter from './users.routes';
 
 const productRoutes = Router();
 
-productRoutes.post('/', async (request, response) => {
+productRoutes.post('/', ensureAuthenticated, async (request, response) => {
     try {
         const { name, description, price, photo } = request.body;
 
