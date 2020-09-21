@@ -15,7 +15,7 @@ class Product {
     price: number;
 
     @Column()
-    photo: string;
+    image: string;
 }
 
 export default Product;

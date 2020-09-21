@@ -29,7 +29,7 @@ export default class CreateProducts1600529057775 implements MigrationInterface {
                         isNullable: false,
                     },
                     {
-                        name: 'photo',
+                        name: 'image',
                         type: 'varchar',
                         isNullable: true,
                     },

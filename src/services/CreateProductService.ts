@@ -5,7 +5,7 @@ import ProductsRepository from '../repositories/ProductsRepository';
 interface Request {
     name: string;
     description?: string;
-    photo?: string;
+    image?: string;
     price: number;
 }
 
@@ -14,7 +14,7 @@ class CreateProductService {
         name,
         description = '',
         price,
-        photo = '',
+        image = '',
     }: Request): Promise<Product> {
         if (!name) throw Error('name must be a valid value');
         if (!price || price <= 0) throw Error('price must be a valid value');
@@ -24,7 +24,7 @@ class CreateProductService {
         const product = productsRepository.create({
             name,
             price,
-            photo,
+            image,
             description,
         });
 

@@ -1,15 +1,19 @@
 import { Router } from 'express';
 import { getCustomRepository } from 'typeorm';
+import multer from 'multer';
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 import ProductsRepository from '../repositories/ProductsRepository';
 import CreateProductService from '../services/CreateProductService';
-import usersRouter from './users.routes';
+import UploadProductImageService from '../services/UpdateProductImageService';
+
+import uploadConfig from '../middlewares/upload';
 
 const productRoutes = Router();
+const upload = multer(uploadConfig);
 
 productRoutes.post('/', ensureAuthenticated, async (request, response) => {
     try {
-        const { name, description, price, photo } = request.body;
+        const { name, description, price, image } = request.body;
 
         const createProductService = new CreateProductService();
 
@@ -17,7 +21,7 @@ productRoutes.post('/', ensureAuthenticated, async (request, response) => {
             name,
             description,
             price,
-            photo,
+            image,
         });
 
         return response.json(product);
@@ -31,5 +35,24 @@ productRoutes.get('/', async (request, response) => {
     const products = await productsRepository.find();
     return response.json(products);
 });
+
+productRoutes.patch(
+    '/:id/image',
+    ensureAuthenticated,
+    upload.single('image'),
+    async (request, response) => {
+        try {
+            const { id } = request.params;
+            const uploadProductImageService = new UploadProductImageService();
+            const product = await uploadProductImageService.execute({
+                product_id: id,
+                fileName: request.file.filename,
+            });
+            return response.json(product);
+        } catch (err) {
+            return response.status(400).json({ error: err.message });
+        }
+    },
+);
 
 export default productRoutes;
