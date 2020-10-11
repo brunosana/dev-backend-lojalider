@@ -5,6 +5,7 @@ import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 import ProductsRepository from '../repositories/ProductsRepository';
 import CreateProductService from '../services/CreateProductService';
 import UploadProductImageService from '../services/UpdateProductImageService';
+import GetProductService from '../services/GetProductService';
 
 import uploadConfig from '../middlewares/upload';
 
@@ -30,6 +31,13 @@ productRoutes.get('/', async (request, response) => {
     const productsRepository = getCustomRepository(ProductsRepository);
     const products = await productsRepository.find();
     return response.json(products);
+});
+
+productRoutes.get('/:id', async (request, response) => {
+    const { id } = request.params;
+    const getProductService = new GetProductService();
+    const product = await getProductService.execute(id);
+    return response.json(product);
 });
 
 productRoutes.patch(

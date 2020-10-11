@@ -27,9 +27,7 @@ class UpdateProductImageService {
         });
 
         if (!product) {
-            throw new AppError(
-                'Only authenticated users can change the product image',
-            );
+            throw new AppError('Product not found', 404);
         }
 
         if (product.image) {
