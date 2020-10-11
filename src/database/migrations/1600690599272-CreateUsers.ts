@@ -1,5 +1,4 @@
-import { query } from 'express';
-import { Column, MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export default class CreateUsers1600690599272 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {

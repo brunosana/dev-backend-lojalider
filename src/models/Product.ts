@@ -14,6 +14,9 @@ class Product {
     @Column('decimal')
     price: number;
 
+    @Column('decimal')
+    offer: number;
+
     @Column()
     image: string;
 }
