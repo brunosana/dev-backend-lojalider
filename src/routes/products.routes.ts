@@ -6,6 +6,7 @@ import ProductsRepository from '../repositories/ProductsRepository';
 import CreateProductService from '../services/CreateProductService';
 import UploadProductImageService from '../services/UpdateProductImageService';
 import GetProductService from '../services/GetProductService';
+import CreateProductOfferService from '../services/CreateProductOfferService';
 
 import uploadConfig from '../middlewares/upload';
 
@@ -26,6 +27,24 @@ productRoutes.post('/', ensureAuthenticated, async (request, response) => {
 
     return response.json(product);
 });
+
+productRoutes.patch(
+    '/:id/offer',
+    ensureAuthenticated,
+    async (request, response) => {
+        const { id } = request.params;
+        const { offer } = request.body;
+
+        const createProductOfferService = new CreateProductOfferService();
+
+        const product = await createProductOfferService.execute({
+            product_id: id,
+            offer,
+        });
+
+        return response.json(product);
+    },
+);
 
 productRoutes.get('/', async (request, response) => {
     const productsRepository = getCustomRepository(ProductsRepository);
