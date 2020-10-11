@@ -9,6 +9,7 @@ import GetProductService from '../services/GetProductService';
 import CreateProductOfferService from '../services/CreateProductOfferService';
 
 import uploadConfig from '../middlewares/upload';
+import DeleteProductOfferService from '../services/DeleteProductOfferService';
 
 const productRoutes = Router();
 const upload = multer(uploadConfig);
@@ -43,6 +44,20 @@ productRoutes.patch(
         });
 
         return response.json(product);
+    },
+);
+
+productRoutes.delete(
+    '/:id/offer',
+    ensureAuthenticated,
+    async (request, response) => {
+        const { id } = request.params;
+
+        const deleteProductOfferService = new DeleteProductOfferService();
+
+        await deleteProductOfferService.execute(id);
+
+        return response.status(204).send();
     },
 );
 
