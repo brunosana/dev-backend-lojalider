@@ -1,6 +1,7 @@
 import { getRepository } from 'typeorm';
 import { hash } from 'bcryptjs';
 import User from '../models/User';
+import AppError from '../errors/AppError';
 
 interface Request {
     email: string;
@@ -15,11 +16,11 @@ class CreateUserService {
         name = '',
     }: Request): Promise<User> {
         if (!email) {
-            throw new Error('Email must be valid');
+            throw new AppError('Email must be valid');
         }
 
         if (!password) {
-            throw new Error('Password must be valid');
+            throw new AppError('Password must be valid');
         }
 
         const userRepository = getRepository(User);
@@ -29,7 +30,7 @@ class CreateUserService {
         });
 
         if (checkEmailExists) {
-            throw new Error('Email already in use');
+            throw new AppError('Email already in use');
         }
 
         const hashedPassword = await hash(password, 8);

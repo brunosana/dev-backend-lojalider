@@ -4,6 +4,7 @@ import path from 'path';
 import uploadConfig from '../middlewares/upload';
 import ProductsRepository from '../repositories/ProductsRepository';
 import Product from '../models/Product';
+import AppError from '../errors/AppError';
 
 interface Request {
     product_id: string;
@@ -13,10 +14,10 @@ interface Request {
 class UpdateProductImageService {
     public async execute({ product_id, fileName }: Request): Promise<Product> {
         if (!product_id) {
-            throw new Error('Invalid product ID');
+            throw new AppError('Invalid product ID');
         }
         if (!fileName) {
-            throw new Error('Invalid filename');
+            throw new AppError('Invalid filename');
         }
 
         const productsRepository = getCustomRepository(ProductsRepository);
@@ -26,7 +27,7 @@ class UpdateProductImageService {
         });
 
         if (!product) {
-            throw new Error(
+            throw new AppError(
                 'Only authenticated users can change the product image',
             );
         }

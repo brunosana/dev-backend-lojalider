@@ -12,22 +12,18 @@ const productRoutes = Router();
 const upload = multer(uploadConfig);
 
 productRoutes.post('/', ensureAuthenticated, async (request, response) => {
-    try {
-        const { name, description, price, image } = request.body;
+    const { name, description, price, image } = request.body;
 
-        const createProductService = new CreateProductService();
+    const createProductService = new CreateProductService();
 
-        const product = await createProductService.execute({
-            name,
-            description,
-            price,
-            image,
-        });
+    const product = await createProductService.execute({
+        name,
+        description,
+        price,
+        image,
+    });
 
-        return response.json(product);
-    } catch (err) {
-        return response.status(400).json({ message: err.message });
-    }
+    return response.json(product);
 });
 
 productRoutes.get('/', async (request, response) => {
@@ -41,17 +37,13 @@ productRoutes.patch(
     ensureAuthenticated,
     upload.single('image'),
     async (request, response) => {
-        try {
-            const { id } = request.params;
-            const uploadProductImageService = new UploadProductImageService();
-            const product = await uploadProductImageService.execute({
-                product_id: id,
-                fileName: request.file.filename,
-            });
-            return response.json(product);
-        } catch (err) {
-            return response.status(400).json({ error: err.message });
-        }
+        const { id } = request.params;
+        const uploadProductImageService = new UploadProductImageService();
+        const product = await uploadProductImageService.execute({
+            product_id: id,
+            fileName: request.file.filename,
+        });
+        return response.json(product);
     },
 );
 

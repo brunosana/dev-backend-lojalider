@@ -1,4 +1,5 @@
 import { getCustomRepository } from 'typeorm';
+import AppError from '../errors/AppError';
 import Product from '../models/Product';
 import ProductsRepository from '../repositories/ProductsRepository';
 
@@ -16,8 +17,9 @@ class CreateProductService {
         price,
         image = '',
     }: Request): Promise<Product> {
-        if (!name) throw Error('name must be a valid value');
-        if (!price || price <= 0) throw Error('price must be a valid value');
+        if (!name) throw new AppError('name must be a valid value');
+        if (!price || price <= 0)
+            throw new AppError('price must be a valid value');
 
         const productsRepository = getCustomRepository(ProductsRepository);
 
